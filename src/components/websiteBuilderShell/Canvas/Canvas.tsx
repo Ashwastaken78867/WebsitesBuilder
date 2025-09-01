@@ -1,3 +1,151 @@
+// import React from "react";
+// import { Rnd } from "react-rnd";
+// import { useDispatch, useSelector } from "react-redux";
+// import { selectComponent, clearSelection } from "@/redux/uiSlice";
+// import { updateBlock, type Block } from "@/redux/elementsSlice";
+// import type { RootState } from "@/redux/store";
+// import type { DraggableEvent, DraggableData } from "react-draggable";
+
+// import Header from "@/DynamicComponents/Header";
+// import Footer from "@/DynamicComponents/Footer";
+
+// interface CanvasProps {
+//   canvasColor: string;
+//   pagesCount: number;
+// }
+
+// export default function Canvas({ canvasColor, pagesCount }: CanvasProps) {
+//   const dispatch = useDispatch();
+//   const blocks = useSelector((s: RootState) => s.elements.blocks);
+//   const selectedId = useSelector((s: RootState) => s.ui.selectedId);
+
+//   const pageHeight = 1000;
+
+//   const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
+//     if ((e.target as Element).classList.contains("canvas-page")) {
+//       dispatch(clearSelection());
+//     }
+//   };
+
+//   return (
+//     <section className="flex-1 p-4 overflow-auto bg-gray-200">
+//       <div className="w-full max-w-6xl mx-auto space-y-6">
+//         {Array.from({ length: pagesCount }).map((_, pageIndex) => (
+//           <div
+//             key={pageIndex}
+//             className="canvas-page relative rounded-lg shadow-xl mx-auto"
+//             style={{ height: pageHeight, backgroundColor: canvasColor }}
+//             onClick={handleCanvasClick}
+//           >
+//             <span className="absolute bottom-2 right-4 text-gray-400 text-sm">
+//               Page {pageIndex + 1}
+//             </span>
+
+//             {blocks.map((b: Block) => {
+//               const selected = selectedId === b.id;
+
+//               // Text styles (color + font size) belong on the inner content
+//               const textStyle: React.CSSProperties = {
+//                 fontSize: b.fontSize ? `${b.fontSize}px` : undefined,
+//                 color: b.color || undefined,
+//               };
+
+//               // Background color should be on the Rnd wrapper itself
+//               const rndStyle: React.CSSProperties = {
+//                 backgroundColor: b.backgroundColor || "transparent",
+//               };
+
+//               return (
+//                 <Rnd
+//                   key={b.id}
+//                   size={{ width: b.width ?? 300, height: b.height ?? 100 }}
+//                   position={{ x: b.x ?? 40, y: b.y ?? 40 }}
+//                   bounds="parent"
+//                   style={rndStyle}
+//                   onDragStop={(_e: DraggableEvent, d: DraggableData) => {
+//                     dispatch(updateBlock({ id: b.id, x: d.x, y: d.y }));
+//                   }}
+//                   onResizeStop={(
+//                     _e,
+//                     _dir,
+//                     ref: HTMLElement,
+//                     _delta,
+//                     position: { x: number; y: number }
+//                   ) => {
+//                     dispatch(
+//                       updateBlock({
+//                         id: b.id,
+//                         width: ref.offsetWidth,
+//                         height: ref.offsetHeight,
+//                         x: position.x,
+//                         y: position.y,
+//                       })
+//                     );
+//                   }}
+//                   className={`absolute p-2 rounded-md border shadow-md transition-all ${
+//                     selected
+//                       ? "ring-2 ring-indigo-500 scale-[1.02]"
+//                       : "hover:ring-1 hover:ring-indigo-300"
+//                   } cursor-move`}
+//                   onClick={(e: { stopPropagation: () => void; }) => {
+//                     e.stopPropagation();
+//                     dispatch(selectComponent(b.id));
+//                   }}
+//                 >
+//                  {b.type === "header" && (
+//   <Header
+//     content={b.content || "Header"}
+//     style={textStyle}
+//     backgroundColor={b.backgroundColor}
+//   />
+// )}
+
+// {b.type === "footer" && (
+//   <Footer
+//     content={b.content || "Footer"}
+//     style={textStyle}
+//     backgroundColor={b.backgroundColor}
+//   />
+// )}
+
+
+//                   {b.type === "text" && (
+//                     <div style={textStyle}>{b.content || "Text"}</div>
+//                   )}
+
+//                   {b.type === "image" && (
+//                     <img
+//                       src={b.content}
+//                       alt="user-content"
+//                       className="w-full h-full object-cover rounded"
+//                     />
+//                   )}
+
+//                   {b.type === "button" && (
+//                     <button
+//                       className="px-4 py-2 rounded"
+//                       // Let inline style control both text & bg color if desired
+//                       style={{
+//                         ...textStyle,
+//                         // if you want to also let button adopt block bg:
+//                         backgroundColor: b.backgroundColor || undefined,
+//                       }}
+//                     >
+//                       {b.content || "Button"}
+//                     </button>
+//                   )}
+//                 </Rnd>
+//               );
+//             })}
+//           </div>
+//         ))}
+//       </div>
+//     </section>
+//   );
+// }
+
+
+
 import React from "react";
 import { Rnd } from "react-rnd";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,102 +189,99 @@ export default function Canvas({ canvasColor, pagesCount }: CanvasProps) {
               Page {pageIndex + 1}
             </span>
 
-            {blocks.map((b: Block) => {
-              const selected = selectedId === b.id;
+            {blocks
+              .filter((b) => b.pageId === pageIndex) // ✅ only render blocks for this page
+              .map((b: Block) => {
+                const selected = selectedId === b.id;
 
-              // Text styles (color + font size) belong on the inner content
-              const textStyle: React.CSSProperties = {
-                fontSize: b.fontSize ? `${b.fontSize}px` : undefined,
-                color: b.color || undefined,
-              };
+                const textStyle: React.CSSProperties = {
+                  fontSize: b.fontSize ? `${b.fontSize}px` : undefined,
+                  color: b.color || undefined,
+                };
 
-              // Background color should be on the Rnd wrapper itself
-              const rndStyle: React.CSSProperties = {
-                backgroundColor: b.backgroundColor || "transparent",
-              };
+                const rndStyle: React.CSSProperties = {
+                  backgroundColor: b.backgroundColor || "transparent",
+                };
 
-              return (
-                <Rnd
-                  key={b.id}
-                  size={{ width: b.width ?? 300, height: b.height ?? 100 }}
-                  position={{ x: b.x ?? 40, y: b.y ?? 40 }}
-                  bounds="parent"
-                  style={rndStyle}
-                  onDragStop={(_e: DraggableEvent, d: DraggableData) => {
-                    dispatch(updateBlock({ id: b.id, x: d.x, y: d.y }));
-                  }}
-                  onResizeStop={(
-                    _e,
-                    _dir,
-                    ref: HTMLElement,
-                    _delta,
-                    position: { x: number; y: number }
-                  ) => {
-                    dispatch(
-                      updateBlock({
-                        id: b.id,
-                        width: ref.offsetWidth,
-                        height: ref.offsetHeight,
-                        x: position.x,
-                        y: position.y,
-                      })
-                    );
-                  }}
-                  className={`absolute p-2 rounded-md border shadow-md transition-all ${
-                    selected
-                      ? "ring-2 ring-indigo-500 scale-[1.02]"
-                      : "hover:ring-1 hover:ring-indigo-300"
-                  } cursor-move`}
-                  onClick={(e: { stopPropagation: () => void; }) => {
-                    e.stopPropagation();
-                    dispatch(selectComponent(b.id));
-                  }}
-                >
-                 {b.type === "header" && (
-  <Header
-    content={b.content || "Header"}
-    style={textStyle}
-    backgroundColor={b.backgroundColor}
-  />
-)}
+                return (
+                  <Rnd
+                    key={b.id}
+                    size={{ width: b.width ?? 300, height: b.height ?? 100 }}
+                    position={{ x: b.x ?? 40, y: b.y ?? 40 }}
+                    bounds="parent"
+                    style={rndStyle}
+                    onDragStop={(_e: DraggableEvent, d: DraggableData) => {
+                      dispatch(updateBlock({ id: b.id, x: d.x, y: d.y }));
+                    }}
+                    onResizeStop={(
+                      _e,
+                      _dir,
+                      ref: HTMLElement,
+                      _delta,
+                      position: { x: number; y: number }
+                    ) => {
+                      dispatch(
+                        updateBlock({
+                          id: b.id,
+                          width: ref.offsetWidth,
+                          height: ref.offsetHeight,
+                          x: position.x,
+                          y: position.y,
+                        })
+                      );
+                    }}
+                    className={`absolute p-2 rounded-md border shadow-md transition-all ${
+                      selected
+                        ? "ring-2 ring-indigo-500 scale-[1.02]"
+                        : "hover:ring-1 hover:ring-indigo-300"
+                    } cursor-move`}
+                    onClick={(e: { stopPropagation: () => void }) => {
+                      e.stopPropagation();
+                      dispatch(selectComponent(b.id));
+                    }}
+                  >
+                    {b.type === "header" && (
+                      <Header
+                        content={b.content || "Header"}
+                        style={textStyle}
+                        backgroundColor={b.backgroundColor}
+                      />
+                    )}
 
-{b.type === "footer" && (
-  <Footer
-    content={b.content || "Footer"}
-    style={textStyle}
-    backgroundColor={b.backgroundColor}
-  />
-)}
+                    {b.type === "footer" && (
+                      <Footer
+                        content={b.content || "Footer"}
+                        style={textStyle}
+                        backgroundColor={b.backgroundColor}
+                      />
+                    )}
 
+                    {b.type === "text" && (
+                      <div style={textStyle}>{b.content || "Text"}</div>
+                    )}
 
-                  {b.type === "text" && (
-                    <div style={textStyle}>{b.content || "Text"}</div>
-                  )}
+                    {b.type === "image" && (
+                      <img
+                        src={b.content}
+                        alt="user-content"
+                        className="w-full h-full object-cover rounded"
+                      />
+                    )}
 
-                  {b.type === "image" && (
-                    <img
-                      src={b.content}
-                      alt="user-content"
-                      className="w-full h-full object-cover rounded"
-                    />
-                  )}
-
-                  {b.type === "button" && (
-                    <button
-                      className="px-4 py-2 rounded"
-                      // Let inline style control both text & bg color if desired
-                      style={{
-                        ...textStyle,
-                        // if you want to also let button adopt block bg:
-                        backgroundColor: b.backgroundColor || undefined,
-                      }}
-                    >
-                      {b.content || "Button"}
-                    </button>
-                  )}
-                </Rnd>
-              );
-            })}
+                    {b.type === "button" && (
+                      <button
+                        className="px-4 py-2 rounded"
+                        style={{
+                          ...textStyle,
+                          backgroundColor: b.backgroundColor || undefined,
+                        }}
+                      >
+                        {b.content || "Button"}
+                      </button>
+                    )}
+                  </Rnd>
+                );
+              })}
           </div>
         ))}
       </div>

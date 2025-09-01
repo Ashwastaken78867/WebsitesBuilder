@@ -8,6 +8,8 @@ interface PropertiesPanelProps {
   setCanvasColor: (color: string) => void;
   addPage: () => void;
   pagesCount: number;
+   currentPage: number;  // ✅ added
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function PropertiesPanel(props: PropertiesPanelProps) {

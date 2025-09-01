@@ -3,7 +3,11 @@ import { addBlock } from "@/redux/elementsSlice";
 import { selectComponent } from "@/redux/uiSlice";
 import type { Block } from "@/redux/elementsSlice";
 
-export default function ElementsPanel() {
+interface ElementsPanelProps {
+  currentPage: number;
+}
+
+export default function ElementsPanel({ currentPage }: ElementsPanelProps) {
   const dispatch = useDispatch();
 
   const makeId = () => Date.now().toString();
@@ -11,7 +15,7 @@ export default function ElementsPanel() {
   const handleAdd = (type: Block["type"]) => {
     const id = makeId();
 
-    // Set default content and size for each block type
+    // Default content and size for each block type
     let content: string;
     let height = 150;
 
@@ -41,6 +45,7 @@ export default function ElementsPanel() {
     const payload: Block = {
       id,
       type,
+      pageId: currentPage, // ✅ assign to active page
       content,
       x: 20,
       y: 20,
@@ -62,7 +67,9 @@ export default function ElementsPanel() {
           onClick={() => handleAdd("text")}
           className="w-full flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-gray-100"
         >
-          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">T</div>
+          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">
+            T
+          </div>
           <div className="text-sm font-medium">Text</div>
         </button>
 
@@ -70,7 +77,9 @@ export default function ElementsPanel() {
           onClick={() => handleAdd("image")}
           className="w-full flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-gray-100"
         >
-          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">🖼️</div>
+          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">
+            🖼️
+          </div>
           <div className="text-sm font-medium">Image</div>
         </button>
 
@@ -78,7 +87,9 @@ export default function ElementsPanel() {
           onClick={() => handleAdd("button")}
           className="w-full flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-gray-100"
         >
-          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">●</div>
+          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">
+            ●
+          </div>
           <div className="text-sm font-medium">Button</div>
         </button>
       </div>
@@ -90,7 +101,9 @@ export default function ElementsPanel() {
           onClick={() => handleAdd("header")}
           className="w-full flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-gray-100"
         >
-          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">H</div>
+          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">
+            H
+          </div>
           <div className="text-sm font-medium">Header</div>
         </button>
 
@@ -98,7 +111,9 @@ export default function ElementsPanel() {
           onClick={() => handleAdd("footer")}
           className="w-full flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-gray-100"
         >
-          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">F</div>
+          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">
+            F
+          </div>
           <div className="text-sm font-medium">Footer</div>
         </button>
       </div>
