@@ -14,6 +14,7 @@ export default function WebsiteBuilderShell() {
   const [pagesCount, setPagesCount] = useState(1);
   const [currentPage, setCurrentPage] = useState(0);
 
+  // Load saved state
   useEffect(() => {
     const saved = localStorage.getItem("builderUI");
     if (saved) {
@@ -24,6 +25,7 @@ export default function WebsiteBuilderShell() {
     }
   }, []);
 
+  // Save state
   useEffect(() => {
     localStorage.setItem(
       "builderUI",
@@ -31,9 +33,20 @@ export default function WebsiteBuilderShell() {
     );
   }, [canvasColor, pagesCount, currentPage]);
 
+  // Add page
   const addPage = () => {
     setPagesCount((prev) => prev + 1);
     setCurrentPage(pagesCount);
+  };
+
+  // Delete page
+  const deletePage = () => {
+    if (pagesCount <= 1) return;
+    const newCount = pagesCount - 1;
+    setPagesCount(newCount);
+    if (currentPage >= newCount) {
+      setCurrentPage(newCount - 1);
+    }
   };
 
   const selectComponent = (id: string) => {
@@ -54,6 +67,7 @@ export default function WebsiteBuilderShell() {
           canvasColor={canvasColor}
           setCanvasColor={setCanvasColor}
           addPage={addPage}
+          deletePage={deletePage}
           pagesCount={pagesCount}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

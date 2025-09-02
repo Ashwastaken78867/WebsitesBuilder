@@ -7,13 +7,15 @@ interface PropertiesPanelProps {
   canvasColor: string;
   setCanvasColor: (color: string) => void;
   addPage: () => void;
+  deletePage: () => void; // ✅ include deletePage here
   pagesCount: number;
-   currentPage: number;  // ✅ added
+  currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function PropertiesPanel(props: PropertiesPanelProps) {
-  const { canvasColor, setCanvasColor, addPage, pagesCount } = props;
+  const { canvasColor, setCanvasColor, addPage, deletePage, pagesCount } = props;
+
   const blocks = useSelector((s: RootState) => s.elements.blocks);
   const selectedId = useSelector((s: RootState) => s.ui.selectedId);
 
@@ -23,6 +25,7 @@ export default function PropertiesPanel(props: PropertiesPanelProps) {
         canvasColor={canvasColor}
         setCanvasColor={setCanvasColor}
         addPage={addPage}
+        deletePage={deletePage} // ✅ pass real function
         pagesCount={pagesCount}
       />
     );
@@ -31,9 +34,7 @@ export default function PropertiesPanel(props: PropertiesPanelProps) {
   const block = blocks.find((x) => x.id === selectedId);
   if (!block) {
     return (
-      // <aside className="w-80 p-5 border-l bg-white overflow-y-auto">
       <aside className="w-80 sm:w-80 xs:w-full p-5 border-l bg-white overflow-y-auto min-w-0">
-
         <h3 className="text-lg font-semibold mb-4">Properties</h3>
         <div className="text-sm text-gray-500">Selected element not found</div>
       </aside>

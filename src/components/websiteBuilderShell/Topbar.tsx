@@ -1,8 +1,10 @@
-import {  useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
+import { setBlocks } from "@/redux/elementsSlice";
 import {
   Save,
-  
+  Upload,
+  Plus,
   ChevronDown,
   UserCircle2,
   Settings,
@@ -10,6 +12,7 @@ import {
 import { useState } from "react";
 
 export default function Topbar() {
+  const dispatch = useDispatch();
   const blocks = useSelector((state: RootState) => state.elements.blocks);
 
   const [pagesDropdown, setPagesDropdown] = useState(false);
@@ -20,6 +23,15 @@ export default function Topbar() {
     alert("Canvas saved!");
   };
 
+  const handleLoad = () => {
+    const saved = localStorage.getItem("canvasData");
+    if (saved) {
+      dispatch(setBlocks(JSON.parse(saved)));
+      alert("Canvas loaded!");
+    } else {
+      alert("No saved canvas found.");
+    }
+  };
 
   return (
     <header className="flex items-center justify-between px-6 py-3 bg-white border-b shadow-md">
@@ -41,7 +53,13 @@ export default function Topbar() {
           Save
         </button>
 
-        
+        <button
+          onClick={handleLoad}
+          className="flex items-center gap-2 px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 transition"
+        >
+          <Upload size={16} />
+          Load
+        </button>
 
         {/* Pages Dropdown */}
         <div className="relative">
