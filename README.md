@@ -51,5 +51,16 @@ npm run dev
 Then open http://localhost:5173/
 
 
-Would you like me to also add a **“Future Improvements”** section (e.g., save/load projects, export HTML, templates) so it looks interview-ready?
+## 🔮 Future Improvements
 
+- Save & Load Projects – persist layouts using localStorage or a backend.
+
+- Export to HTML/CSS – generate clean HTML/CSS from the canvas for deployment.
+
+- Predefined Templates – quick-start designs for faster website building.
+
+- Additional Components – forms, videos, image galleries, cards, etc.
+
+- Responsive Controls – fine-tune layouts for desktop, tablet, and mobile views.
+
+- Collaboration Support – real-time editing with multiple users.
