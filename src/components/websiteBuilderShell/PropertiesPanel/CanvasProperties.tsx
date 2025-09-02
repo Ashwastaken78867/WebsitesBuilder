@@ -13,7 +13,9 @@ export default function CanvasProperties({
   pagesCount,
 }: CanvasPropertiesProps) {
   return (
-    <aside className="w-80 p-5 border-l bg-white overflow-y-auto">
+    // <aside className="w-80 p-5 border-l bg-white overflow-y-auto">
+    <aside className="w-80 sm:w-80 xs:w-full p-5 border-l bg-white overflow-y-auto min-w-0">
+
       <h3 className="text-lg font-semibold mb-4">Canvas Properties</h3>
       <div className="space-y-4">
         <button

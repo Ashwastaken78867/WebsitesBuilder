@@ -14,7 +14,9 @@ export default function BlockProperties({ block }: BlockPropertiesProps) {
   };
 
   return (
-    <aside className="w-80 p-5 border-l bg-white overflow-y-auto">
+    // <aside className="w-80 p-5 border-l bg-white overflow-y-auto">
+    <aside className="w-80 sm:w-80 xs:w-full p-5 border-l bg-white overflow-y-auto min-w-0">
+
       <h3 className="text-lg font-semibold mb-4">Block Properties</h3>
       <div className="space-y-4">
         {(block.type === "text" ||

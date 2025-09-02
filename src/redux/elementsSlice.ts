@@ -44,10 +44,14 @@ const elementsSlice = createSlice({
     clearBlocks: (state) => {
       state.blocks = [];
     },
+    setBlocks: (state, action: PayloadAction<Block[]>) => {
+  state.blocks = action.payload;
+},
+
   },
 });
 
-export const { addBlock, updateBlock, deleteBlock, clearBlocks } =
+export const { addBlock,setBlocks, updateBlock, deleteBlock, clearBlocks } =
   elementsSlice.actions;
 
 export default elementsSlice.reducer;

@@ -1,21 +1,25 @@
-import { useDispatch } from "react-redux";
-import { addBlock } from "@/redux/elementsSlice";
-import { selectComponent } from "@/redux/uiSlice";
+import { useState } from "react";
+import ElementGroup from "./ElementGroup";
 import type { Block } from "@/redux/elementsSlice";
 
 interface ElementsPanelProps {
   currentPage: number;
+  addBlock: (payload: Block) => void;
+  selectComponent: (id: string) => void;
 }
 
-export default function ElementsPanel({ currentPage }: ElementsPanelProps) {
-  const dispatch = useDispatch();
+export default function ElementsPanel({
+  currentPage,
+  addBlock,
+  selectComponent,
+}: ElementsPanelProps) {
+  const [openDropdown, setOpenDropdown] = useState<"elements" | "components" | null>(null);
 
-  const makeId = () => Date.now().toString();
+  // ✅ Truly unique ID
+  const makeId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
   const handleAdd = (type: Block["type"]) => {
     const id = makeId();
-
-    // Default content and size for each block type
     let content: string;
     let height = 150;
 
@@ -45,7 +49,7 @@ export default function ElementsPanel({ currentPage }: ElementsPanelProps) {
     const payload: Block = {
       id,
       type,
-      pageId: currentPage, // ✅ assign to active page
+      pageId: currentPage,
       content,
       x: 20,
       y: 20,
@@ -53,70 +57,39 @@ export default function ElementsPanel({ currentPage }: ElementsPanelProps) {
       height,
     };
 
-    dispatch(addBlock(payload));
-    dispatch(selectComponent(id));
+    addBlock(payload);
+    selectComponent(id);
+  };
+
+  const toggleDropdown = (menu: "elements" | "components") => {
+    setOpenDropdown(openDropdown === menu ? null : menu);
   };
 
   return (
-    <aside className="w-64 p-5 border-r bg-white overflow-y-auto">
-      <h3 className="text-lg font-semibold mb-4">Elements</h3>
+    <aside className="w-64 sm:w-64 xs:w-full p-5 border-r bg-white flex flex-col min-h-0">
+      <div className="flex-1 overflow-y-auto space-y-4">
+        <h3 className="text-lg font-semibold mb-2">Canvas Tools</h3>
 
-      {/* Basic Elements */}
-      <div className="space-y-3">
-        <button
-          onClick={() => handleAdd("text")}
-          className="w-full flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-gray-100"
-        >
-          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">
-            T
-          </div>
-          <div className="text-sm font-medium">Text</div>
-        </button>
+        <ElementGroup
+          title="Elements"
+          items={["text", "image", "button"]}
+          openDropdown={openDropdown}
+          toggleDropdown={toggleDropdown}
+          typeKey="elements"
+          handleAdd={handleAdd}
+        />
 
-        <button
-          onClick={() => handleAdd("image")}
-          className="w-full flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-gray-100"
-        >
-          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">
-            🖼️
-          </div>
-          <div className="text-sm font-medium">Image</div>
-        </button>
-
-        <button
-          onClick={() => handleAdd("button")}
-          className="w-full flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-gray-100"
-        >
-          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">
-            ●
-          </div>
-          <div className="text-sm font-medium">Button</div>
-        </button>
+        <ElementGroup
+          title="Components"
+          items={["header", "footer"]}
+          openDropdown={openDropdown}
+          toggleDropdown={toggleDropdown}
+          typeKey="components"
+          handleAdd={handleAdd}
+        />
       </div>
 
-      {/* Prebuilt Components */}
-      <h3 className="text-lg font-semibold mt-6 mb-2">Components</h3>
-      <div className="space-y-3">
-        <button
-          onClick={() => handleAdd("header")}
-          className="w-full flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-gray-100"
-        >
-          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">
-            H
-          </div>
-          <div className="text-sm font-medium">Header</div>
-        </button>
-
-        <button
-          onClick={() => handleAdd("footer")}
-          className="w-full flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-gray-100"
-        >
-          <div className="w-9 h-9 rounded-md bg-white border flex items-center justify-center text-gray-700">
-            F
-          </div>
-          <div className="text-sm font-medium">Footer</div>
-        </button>
-      </div>
+    
     </aside>
   );
 }

@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import Topbar from "./Topbar";
 import ElementsPanel from "./ElementPanel/ElementsPanel";
 import Canvas from "./Canvas/Canvas";
 import PropertiesPanel from "./PropertiesPanel/PropertiesPanel";
+import type { Block } from "@/redux/elementsSlice";
+import { addBlock as addBlockAction } from "@/redux/elementsSlice";
 
 export default function WebsiteBuilderShell() {
+  const dispatch = useDispatch();
+
   const [canvasColor, setCanvasColor] = useState("#ffffff");
   const [pagesCount, setPagesCount] = useState(1);
   const [currentPage, setCurrentPage] = useState(0);
 
-  // --- Load from localStorage on mount ---
   useEffect(() => {
     const saved = localStorage.getItem("builderUI");
     if (saved) {
@@ -20,7 +24,6 @@ export default function WebsiteBuilderShell() {
     }
   }, []);
 
-  // --- Save to localStorage when values change ---
   useEffect(() => {
     localStorage.setItem(
       "builderUI",
@@ -30,14 +33,22 @@ export default function WebsiteBuilderShell() {
 
   const addPage = () => {
     setPagesCount((prev) => prev + 1);
-    setCurrentPage(pagesCount); // switch to the new page
+    setCurrentPage(pagesCount);
+  };
+
+  const selectComponent = (id: string) => {
+    console.log("Selected block ID:", id);
   };
 
   return (
     <div className="flex flex-col h-full bg-gray-50">
       <Topbar />
-      <main className="flex flex-1 overflow-hidden">
-        <ElementsPanel currentPage={currentPage} />
+      <main className="flex flex-1 overflow-auto flex-col sm:flex-row min-w-0">
+        <ElementsPanel
+          currentPage={currentPage}
+          addBlock={(payload: Block) => dispatch(addBlockAction(payload))}
+          selectComponent={selectComponent}
+        />
         <Canvas canvasColor={canvasColor} pagesCount={pagesCount} />
         <PropertiesPanel
           canvasColor={canvasColor}
