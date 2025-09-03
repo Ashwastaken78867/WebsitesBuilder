@@ -159,6 +159,25 @@ export default function BlockProperties({ block }: BlockPropertiesProps) {
           </div>
         )}
 
+        {/* Card */}
+        {block.type === "card" && (
+          <div className="space-y-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Card Background
+            </label>
+            <input
+              type="color"
+              className="w-full h-10 p-0 border rounded shadow-sm cursor-pointer"
+              value={block.backgroundColor ?? "#f9f9f9"}
+              onChange={(e) =>
+                dispatch(
+                  updateBlock({ id: block.id, backgroundColor: e.target.value })
+                )
+              }
+            />
+          </div>
+        )}
+
         {/* Actions */}
         <div className="flex gap-3 mt-4 border-t pt-4">
           <button

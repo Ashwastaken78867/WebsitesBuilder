@@ -6,6 +6,7 @@ import { updateBlock, type Block } from "@/redux/elementsSlice";
 import type { RootState } from "@/redux/store";
 import type { DraggableEvent, DraggableData } from "react-draggable";
 
+import Card from "@/DynamicComponents/Card";
 import Header from "@/DynamicComponents/Header";
 import Footer from "@/DynamicComponents/Footer";
 
@@ -57,7 +58,7 @@ export default function Canvas({ canvasColor, pagesCount }: CanvasProps) {
 
                 return (
                   <Rnd
-                    key={b.id} // ✅ unique key
+                    key={b.id}
                     size={{
                       width: Math.min(b.width ?? 300, window.innerWidth - 200),
                       height: b.height ?? 100,
@@ -89,20 +90,50 @@ export default function Canvas({ canvasColor, pagesCount }: CanvasProps) {
                       dispatch(selectComponent(b.id));
                     }}
                   >
+                    {/* ✅ Card block */}
+                    {b.type === "card" && (
+                      <Card
+                        content={b.content}
+                        backgroundColor={b.backgroundColor}
+                        style={{ color: b.color, fontSize: b.fontSize }}
+                      />
+                    )}
+
                     {b.type === "header" && (
-                      <Header content={b.content || "Header"} style={textStyle} backgroundColor={b.backgroundColor} />
+                      <Header
+                        content={b.content || "Header"}
+                        style={textStyle}
+                        backgroundColor={b.backgroundColor}
+                      />
                     )}
+
                     {b.type === "footer" && (
-                      <Footer content={b.content || "Footer"} style={textStyle} backgroundColor={b.backgroundColor} />
+                      <Footer
+                        content={b.content || "Footer"}
+                        style={textStyle}
+                        backgroundColor={b.backgroundColor}
+                      />
                     )}
-                    {b.type === "text" && <div style={textStyle}>{b.content || "Text"}</div>}
+
+                    {b.type === "text" && (
+                      <div style={textStyle}>{b.content || "Text"}</div>
+                    )}
+
                     {b.type === "image" && (
-                      <img src={b.content} alt="user-content" className="w-full h-full object-cover rounded" />
+                      <img
+                        src={b.content}
+                        alt="user-content"
+                        className="w-full h-full object-cover rounded"
+                      />
                     )}
+
                     {b.type === "button" && (
                       <button
                         className="px-4 py-2 rounded"
-                        style={{ ...textStyle, backgroundColor: b.backgroundColor || undefined }}
+                        style={{
+                          ...textStyle,
+                          backgroundColor: b.backgroundColor || undefined,
+                        }}
                       >
                         {b.content || "Button"}
                       </button>

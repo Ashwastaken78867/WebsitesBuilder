@@ -12,6 +12,7 @@ export default function ElementButton({ type, handleAdd }: ElementButtonProps) {
     button: "●",
     header: "H",
     footer: "F",
+    card: ""
   };
 
   return (

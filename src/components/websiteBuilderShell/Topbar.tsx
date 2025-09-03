@@ -4,7 +4,7 @@ import { setBlocks } from "@/redux/elementsSlice";
 import {
   Save,
   Upload,
-  Plus,
+
   ChevronDown,
   UserCircle2,
   Settings,

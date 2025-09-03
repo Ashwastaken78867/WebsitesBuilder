@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export interface Block {
   id: string;
-  type: "text" | "image" | "button" | "header" | "footer";
+  type: "text" | "image" | "button" | "header" | "footer" |"card";
   pageId: number; // ✅ page reference
   content?: string;
   x?: number;
