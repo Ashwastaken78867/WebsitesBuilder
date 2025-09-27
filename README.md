@@ -1,6 +1,6 @@
 # Website Builder
 
-A drag-and-drop website builder built with **React, Redux Toolkit, TypeScript, Tailwind CSS, and react-rnd**.  
+A drag-and-drop websites builder built with **React, Redux Toolkit, TypeScript, Tailwind CSS, and react-rnd**.  
 It allows users to place and edit components like **Text, Image, Button, Header, and Footer** on a canvas, making website creation more intuitive and interactive.
 
 ---
